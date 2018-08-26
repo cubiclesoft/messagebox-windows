@@ -26,7 +26,7 @@ Running the command with the `/?` option will display the options:
 ```
 (C) 2018 CubicleSoft.  All Rights Reserved.
 
-Syntax:  messagebox [options] [Title [Caption]]
+Syntax:  messagebox.exe [options] [Title [Caption]]
 
 Options:
         /v
