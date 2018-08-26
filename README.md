@@ -80,7 +80,7 @@ Options:
                 MB_SERVICE_NOTIFICATION
 ```
 
-Example:
+Example with verbose output:
 
 ```
 C:\>messagebox.exe /v /f=MB_OKCANCEL /f=MB_ICONWARNING "The application crashed.  See the log file for details.  Press OK to continue or Cancel to exit now." "Oh Dear!"
@@ -107,5 +107,5 @@ Sources
 
 The MessageBox() and MessageBeep() APIs on MSDN Library have the intimate details on each option:
 
-https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-messagebox
-https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-messagebeep
+* https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-messagebox
+* https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-messagebeep
