@@ -12,7 +12,8 @@ Features
 
 * Command-line action!
 * Verbose mode tells you exactly how MessageBox() or MessageBeep() will be called.  No more guessing!
-* Pre-built binaries against Visual Studio (statically linked C++ runtime, minimal file size of ~80K, direct Win32 API calls).
+* Pre-built binaries using Visual Studio (statically linked C++ runtime, minimal file size of ~85K, direct Win32 API calls).
+* Windows subsystem variant.
 * Unicode support.
 * Offers almost everything MessageBox() and MessageBeep() offers.
 * Has a liberal open source license.  MIT or LGPL, your choice.
@@ -101,6 +102,15 @@ MessageBox(
 ```
 
 Which waits for the message box to be closed and returns the return code of the selected button.
+
+Windows Subsystem Variant
+-------------------------
+
+While `messagebox.exe` is intended for use with console apps, `messagebox-win.exe` is intended for detached console and GUI applications.  Starting `messagebox.exe` in certain situations will briefly flash a console window before displaying the error message.  Calling `messagebox-win.exe` instead will no longer show the console window.
+
+Why not just use `messagebox-win.exe`?  Since `messagebox-win.exe` starts as a Windows GUI application, there is the tendency for it to be run in the background and the message box that displays may not behave as a modal dialog.  The software is a little bit trickier to work with as a result.  It's also a few KB larger than `messagebox.exe`.
+
+There is one additional option specifically for `messagebox-win.exe` called `/attach` which attempts to attach to the console of the parent process (if any).
 
 Sources
 -------

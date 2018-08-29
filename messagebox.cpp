@@ -18,63 +18,93 @@
 #include <windows.h>
 #include <tchar.h>
 
+#ifdef SUBSYSTEM_WINDOWS
+// If the caller is a console application and is waiting for this application to complete, then attach to the console.
+void InitVerboseMode(void)
+{
+	if (::AttachConsole(ATTACH_PARENT_PROCESS))
+	{
+		if (::GetStdHandle(STD_OUTPUT_HANDLE) != INVALID_HANDLE_VALUE)
+		{
+			freopen("CONOUT$", "w", stdout);
+			setvbuf(stdout, NULL, _IONBF, 0);
+		}
+
+		if (::GetStdHandle(STD_ERROR_HANDLE) != INVALID_HANDLE_VALUE)
+		{
+			freopen("CONOUT$", "w", stderr);
+			setvbuf(stderr, NULL, _IONBF, 0);
+		}
+	}
+}
+#endif
+
 void DumpSyntax(TCHAR *currfile)
 {
+#ifdef SUBSYSTEM_WINDOWS
+	InitVerboseMode();
+#endif
+
 	_tprintf(_T("(C) 2018 CubicleSoft.  All Rights Reserved.\n\n"));
 
 	_tprintf(_T("Syntax:  %s [options] [Title [Caption]]\n\n"), currfile);
 
 	_tprintf(_T("Options:\n"));
 
-	_tprintf(_T("\t/v\n"));
-	_tprintf(_T("\tVerbose mode.\n\n"));
+	_tprintf(_T("\t/v\n\
+\tVerbose mode.\n\
+\n\
+\t/f=Buttons\n\
+\t\tSets the buttons of the message box.\n\
+\t\tThe 'Buttons' can be one of:\n\
+\t\tMB_ABORTRETRYIGNORE\n\
+\t\tMB_CANCELTRYCONTINUE\n\
+\t\tMB_OK (Default)\n\
+\t\tMB_OKCANCEL\n\
+\t\tMB_RETRYCANCEL\n\
+\t\tMB_YESNO\n\
+\t\tMB_YESNOCANCEL\n\
+\n\
+\t/f=Icon\n\
+\t\tSets the icon of the message box.\n\
+\t\tThe 'Icon' can be one of:\n\
+\t\tMB_ICONERROR\n\
+\t\tMB_ICONWARNING\n\
+\t\tMB_ICONINFORMATION\n\
+\t\tMB_ICONQUESTION\n\
+\n\
+\t/f=DefaultButton\n\
+\t\tSets the default button for the message box.\n\
+\t\tThe 'DefaultButton' can be one of:\n\
+\t\tMB_DEFBUTTON1 (Default)\n\
+\t\tMB_DEFBUTTON2\n\
+\t\tMB_DEFBUTTON3\n\
+\t\tMB_DEFBUTTON4\n\
+\n\
+\t/f=Modality\n\
+\t\tSets the modality for the message box.\n\
+\t\tThe 'Modality' can be one of:\n\
+\t\tMB_APPLMODAL (Default)\n\
+\t\tMB_SYSTEMMODAL\n\
+\t\tMB_TASKMODAL\n\
+\n\
+\t/f=MiscFlag\n\
+\t\tSets the miscellaneous flags for the message box.\n\
+\t\tMultiple /f options can be specified.\n\
+\t\tEach 'MiscFlag' can be one of:\n\
+\t\tMB_SIMPLEBEEP (Only when Title is not used)\n\
+\t\tMB_HELP (Probably won't work)\n\
+\t\tMB_DEFAULT_DESKTOP_ONLY\n\
+\t\tMB_RIGHT\n\
+\t\tMB_RTLREADING\n\
+\t\tMB_SETFOREGROUND\n\
+\t\tMB_TOPMOST\n\
+\t\tMB_SERVICE_NOTIFICATION\n\n"));
 
-	_tprintf(_T("\t/f=Buttons\n"));
-	_tprintf(_T("\t\tSets the buttons of the message box.\n"));
-	_tprintf(_T("\t\tThe 'Buttons' can be one of:\n"));
-	_tprintf(_T("\t\tMB_ABORTRETRYIGNORE\n"));
-	_tprintf(_T("\t\tMB_CANCELTRYCONTINUE\n"));
-	_tprintf(_T("\t\tMB_OK (Default)\n"));
-	_tprintf(_T("\t\tMB_OKCANCEL\n"));
-	_tprintf(_T("\t\tMB_RETRYCANCEL\n"));
-	_tprintf(_T("\t\tMB_YESNO\n"));
-	_tprintf(_T("\t\tMB_YESNOCANCEL\n\n"));
-
-	_tprintf(_T("\t/f=Icon\n"));
-	_tprintf(_T("\t\tSets the icon of the message box.\n"));
-	_tprintf(_T("\t\tThe 'Icon' can be one of:\n"));
-	_tprintf(_T("\t\tMB_ICONERROR\n"));
-	_tprintf(_T("\t\tMB_ICONWARNING\n"));
-	_tprintf(_T("\t\tMB_ICONINFORMATION\n"));
-	_tprintf(_T("\t\tMB_ICONQUESTION\n\n"));
-
-	_tprintf(_T("\t/f=DefaultButton\n"));
-	_tprintf(_T("\t\tSets the default button for the message box.\n"));
-	_tprintf(_T("\t\tThe 'DefaultButton' can be one of:\n"));
-	_tprintf(_T("\t\tMB_DEFBUTTON1 (Default)\n"));
-	_tprintf(_T("\t\tMB_DEFBUTTON2\n"));
-	_tprintf(_T("\t\tMB_DEFBUTTON3\n"));
-	_tprintf(_T("\t\tMB_DEFBUTTON4\n\n"));
-
-	_tprintf(_T("\t/f=Modality\n"));
-	_tprintf(_T("\t\tSets the modality for the message box.\n"));
-	_tprintf(_T("\t\tThe 'Modality' can be one of:\n"));
-	_tprintf(_T("\t\tMB_APPLMODAL (Default)\n"));
-	_tprintf(_T("\t\tMB_SYSTEMMODAL\n"));
-	_tprintf(_T("\t\tMB_TASKMODAL\n\n"));
-
-	_tprintf(_T("\t/f=MiscFlag\n"));
-	_tprintf(_T("\t\tSets the miscellaneous flags for the message box.\n"));
-	_tprintf(_T("\t\tMultiple /f options can be specified.\n"));
-	_tprintf(_T("\t\tEach 'MiscFlag' can be one of:\n"));
-	_tprintf(_T("\t\tMB_SIMPLEBEEP (Only when Title is not used)\n"));
-	_tprintf(_T("\t\tMB_HELP (Probably won't work)\n"));
-	_tprintf(_T("\t\tMB_DEFAULT_DESKTOP_ONLY\n"));
-	_tprintf(_T("\t\tMB_RIGHT\n"));
-	_tprintf(_T("\t\tMB_RTLREADING\n"));
-	_tprintf(_T("\t\tMB_SETFOREGROUND\n"));
-	_tprintf(_T("\t\tMB_TOPMOST\n"));
-	_tprintf(_T("\t\tMB_SERVICE_NOTIFICATION\n\n"));
+#ifdef SUBSYSTEM_WINDOWS
+	_tprintf(_T("\t/attach\n"));
+	_tprintf(_T("\t\tAttempt to attach to a parent console if it exists.\n\n"));
+#endif
 }
 
 int _tmain(int argc, TCHAR **argv)
@@ -124,6 +154,13 @@ int _tmain(int argc, TCHAR **argv)
 		else if (!_tcsicmp(argv[x], _T("/f=MB_SETFOREGROUND")))  flags |= MB_SETFOREGROUND;
 		else if (!_tcsicmp(argv[x], _T("/f=MB_TOPMOST")))  flags |= MB_TOPMOST;
 		else if (!_tcsicmp(argv[x], _T("/f=MB_SERVICE_NOTIFICATION")))  flags |= MB_SERVICE_NOTIFICATION;
+		else if (!_tcsicmp(argv[x], _T("/attach")))
+		{
+#ifdef SUBSYSTEM_WINDOWS
+			// For the Windows subsystem only, attempt to attach to a parent console if it exists.
+			InitVerboseMode();
+#endif
+		}
 		else
 		{
 			// Probably reached the command to execute portion of the arguments.
@@ -133,6 +170,10 @@ int _tmain(int argc, TCHAR **argv)
 
 	if (verbose)
 	{
+#ifdef SUBSYSTEM_WINDOWS
+		InitVerboseMode();
+#endif
+
 		_tprintf(_T("Arguments:\n"));
 		for (int x2 = 0; x2 < argc; x2++)
 		{
@@ -210,6 +251,10 @@ int _tmain(int argc, TCHAR **argv)
 
 	if (!result)
 	{
+#ifdef SUBSYSTEM_WINDOWS
+		InitVerboseMode();
+#endif
+
 		DWORD errnum = ::GetLastError();
 		LPTSTR errmsg = NULL;
 
@@ -226,3 +271,100 @@ int _tmain(int argc, TCHAR **argv)
 
 	return result;
 }
+
+#ifdef SUBSYSTEM_WINDOWS
+#ifndef UNICODE
+// Swiped from:  https://stackoverflow.com/questions/291424/canonical-way-to-parse-the-command-line-into-arguments-in-plain-c-windows-api
+LPSTR* CommandLineToArgvA(LPSTR lpCmdLine, INT *pNumArgs)
+{
+	int retval;
+	retval = ::MultiByteToWideChar(CP_ACP, MB_ERR_INVALID_CHARS, lpCmdLine, -1, NULL, 0);
+	if (!SUCCEEDED(retval))  return NULL;
+
+	LPWSTR lpWideCharStr = (LPWSTR)malloc(retval * sizeof(WCHAR));
+	if (lpWideCharStr == NULL)  return NULL;
+
+	retval = ::MultiByteToWideChar(CP_ACP, MB_ERR_INVALID_CHARS, lpCmdLine, -1, lpWideCharStr, retval);
+	if (!SUCCEEDED(retval))
+	{
+		free(lpWideCharStr);
+
+		return NULL;
+	}
+
+	int numArgs;
+	LPWSTR* args;
+	args = ::CommandLineToArgvW(lpWideCharStr, &numArgs);
+	free(lpWideCharStr);
+	if (args == NULL)  return NULL;
+
+	int storage = numArgs * sizeof(LPSTR);
+	for (int i = 0; i < numArgs; i++)
+	{
+		BOOL lpUsedDefaultChar = FALSE;
+		retval = ::WideCharToMultiByte(CP_ACP, 0, args[i], -1, NULL, 0, NULL, &lpUsedDefaultChar);
+		if (!SUCCEEDED(retval))
+		{
+			::LocalFree(args);
+
+			return NULL;
+		}
+
+		storage += retval;
+	}
+
+	LPSTR* result = (LPSTR *)::LocalAlloc(LMEM_FIXED, storage);
+	if (result == NULL)
+	{
+		LocalFree(args);
+
+		return NULL;
+	}
+
+	int bufLen = storage - numArgs * sizeof(LPSTR);
+	LPSTR buffer = ((LPSTR)result) + numArgs * sizeof(LPSTR);
+	for (int i = 0; i < numArgs; ++ i)
+	{
+		BOOL lpUsedDefaultChar = FALSE;
+		retval = ::WideCharToMultiByte(CP_ACP, 0, args[i], -1, buffer, bufLen, NULL, &lpUsedDefaultChar);
+		if (!SUCCEEDED(retval))
+		{
+			::LocalFree(result);
+			::LocalFree(args);
+
+			return NULL;
+		}
+
+		result[i] = buffer;
+		buffer += retval;
+		bufLen -= retval;
+	}
+
+	::LocalFree(args);
+
+	*pNumArgs = numArgs;
+	return result;
+}
+#endif
+
+int CALLBACK WinMain(HINSTANCE /* hInstance */, HINSTANCE /* hPrevInstance */, LPSTR lpCmdLine, int /* nCmdShow */)
+{
+	int argc;
+	TCHAR **argv;
+	int result;
+
+#ifdef UNICODE
+	argv = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
+#else
+	argv = CommandLineToArgvA(lpCmdLine, &argc);
+#endif
+
+	if (argv == NULL)  return 0;
+
+	result = _tmain(argc, argv);
+
+	::LocalFree(argv);
+
+	return result;
+}
+#endif
