@@ -79,6 +79,11 @@ Options:
                 MB_SETFOREGROUND
                 MB_TOPMOST
                 MB_SERVICE_NOTIFICATION
+
+        /w=Milliseconds
+                The amount of time, in milliseconds, to wait.
+                The default behavior is to wait indefinitely.
+                This feature relies on an undocumented Windows API.
 ```
 
 Example with verbose output:
