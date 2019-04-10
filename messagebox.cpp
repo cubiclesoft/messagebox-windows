@@ -18,6 +18,8 @@
 #include <windows.h>
 #include <tchar.h>
 
+typedef int (__stdcall *MessageBoxTimeoutFunc)(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType, WORD wLanguageId, DWORD dwMilliseconds);
+
 #ifdef SUBSYSTEM_WINDOWS
 // If the caller is a console application and is waiting for this application to complete, then attach to the console.
 void InitVerboseMode(void)
@@ -99,7 +101,12 @@ void DumpSyntax(TCHAR *currfile)
 \t\tMB_RTLREADING\n\
 \t\tMB_SETFOREGROUND\n\
 \t\tMB_TOPMOST\n\
-\t\tMB_SERVICE_NOTIFICATION\n\n"));
+\t\tMB_SERVICE_NOTIFICATION\n\
+\n\
+\t/w=Milliseconds\n\
+\tThe amount of time, in milliseconds, to wait.\n\
+\tThe default behavior is to wait indefinitely.\n\
+\tThis feature relies on an undocumented Windows API.\n\n"));
 
 #ifdef SUBSYSTEM_WINDOWS
 	_tprintf(_T("\t/attach\n"));
@@ -116,6 +123,8 @@ int _tmain(int argc, TCHAR **argv)
 	UINT modality = MB_APPLMODAL;
 	bool simplebeep = false;
 	UINT flags = 0;
+	HMODULE modulehandle = NULL;
+	DWORD waitamount = INFINITE;
 
 	// Process command-line options.
 	int x;
@@ -154,6 +163,7 @@ int _tmain(int argc, TCHAR **argv)
 		else if (!_tcsicmp(argv[x], _T("/f=MB_SETFOREGROUND")))  flags |= MB_SETFOREGROUND;
 		else if (!_tcsicmp(argv[x], _T("/f=MB_TOPMOST")))  flags |= MB_TOPMOST;
 		else if (!_tcsicmp(argv[x], _T("/f=MB_SERVICE_NOTIFICATION")))  flags |= MB_SERVICE_NOTIFICATION;
+		else if (!_tcsncicmp(argv[x], _T("/w="), 3))  waitamount = _tstoi(argv[x] + 3);
 		else if (!_tcsicmp(argv[x], _T("/attach")))
 		{
 #ifdef SUBSYSTEM_WINDOWS
@@ -246,7 +256,27 @@ int _tmain(int argc, TCHAR **argv)
 			_tprintf(_T(");\n"));
 		}
 
-		result = ::MessageBox(::GetConsoleWindow(), argv[x], (x + 1 < argc ? argv[x + 1] : NULL), buttons | icon | defbutton | modality | flags);
+		bool displayed = false;
+
+		if (waitamount != INFINITE)
+		{
+			HMODULE modulehandle = ::LoadLibrary(_T("user32.dll"));
+
+#ifdef UNICODE
+			MessageBoxTimeoutFunc TempMBTPtr = (MessageBoxTimeoutFunc)::GetProcAddress(modulehandle, "MessageBoxTimeoutW");
+#else
+			MessageBoxTimeoutFunc TempMBTPtr = (MessageBoxTimeoutFunc)::GetProcAddress(modulehandle, "MessageBoxTimeoutA");
+#endif
+
+			if (TempMBTPtr != NULL)
+			{
+				result = TempMBTPtr(::GetConsoleWindow(), argv[x], (x + 1 < argc ? argv[x + 1] : NULL), buttons | icon | defbutton | modality | flags, 0, waitamount);
+
+				displayed = true;
+			}
+		}
+
+		if (!displayed)  result = ::MessageBox(::GetConsoleWindow(), argv[x], (x + 1 < argc ? argv[x + 1] : NULL), buttons | icon | defbutton | modality | flags);
 	}
 
 	if (!result)
@@ -268,6 +298,8 @@ int _tmain(int argc, TCHAR **argv)
 			::LocalFree(errmsg);
 		}
 	}
+
+	if (modulehandle != NULL)  ::FreeLibrary(modulehandle);
 
 	return result;
 }
