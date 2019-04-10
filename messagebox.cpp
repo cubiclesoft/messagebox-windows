@@ -1,7 +1,7 @@
 // A simple program whose sole job is to execute modal MessageBox()/MessageBeep() API calls and returning the result.
 // Useful for notifying the user and/or asking Yes/No/FileNotFound questions.  Limited to what MessageBox() can do.
 //
-// (C) 2018 CubicleSoft.  All Rights Reserved.
+// (C) 2019 CubicleSoft.  All Rights Reserved.
 
 // Implemented as a single file compilation unit.
 
@@ -47,7 +47,7 @@ void DumpSyntax(TCHAR *currfile)
 	InitVerboseMode();
 #endif
 
-	_tprintf(_T("(C) 2018 CubicleSoft.  All Rights Reserved.\n\n"));
+	_tprintf(_T("(C) 2019 CubicleSoft.  All Rights Reserved.\n\n"));
 
 	_tprintf(_T("Syntax:  %s [options] [Title [Caption]]\n\n"), currfile);
 
