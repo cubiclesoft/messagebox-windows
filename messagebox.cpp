@@ -104,9 +104,9 @@ void DumpSyntax(TCHAR *currfile)
 \t\tMB_SERVICE_NOTIFICATION\n\
 \n\
 \t/w=Milliseconds\n\
-\tThe amount of time, in milliseconds, to wait.\n\
-\tThe default behavior is to wait indefinitely.\n\
-\tThis feature relies on an undocumented Windows API.\n\n"));
+\t\tThe amount of time, in milliseconds, to wait.\n\
+\t\tThe default behavior is to wait indefinitely.\n\
+\t\tThis feature relies on an undocumented Windows API.\n\n"));
 
 #ifdef SUBSYSTEM_WINDOWS
 	_tprintf(_T("\t/attach\n"));
