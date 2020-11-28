@@ -7,6 +7,8 @@ This project is intended primarily for use from batch files (.bat) and other scr
 
 Why would you need this?  To easily display native Windows message boxes from command-line scripts that also returns the user's response (i.e. which button was pressed).  Useful for handling critical application/script failures.
 
+[![Donate](https://cubiclesoft.com/res/donate-shield.png)](https://cubiclesoft.com/donate/) [![Discord](https://img.shields.io/discord/777282089980526602?label=chat&logo=discord)](https://cubiclesoft.com/product-support/github/)
+
 Features
 --------
 
