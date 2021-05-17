@@ -27,65 +27,69 @@ Useful Information
 Running the command with the `/?` option will display the options:
 
 ```
-(C) 2018 CubicleSoft.  All Rights Reserved.
+(C) 2021 CubicleSoft.  All Rights Reserved.
 
-Syntax:  messagebox.exe [options] [Title [Caption]]
+Syntax:  messagebox.exe [options] [Text [Caption/Title]]
 
 Options:
         /v
         Verbose mode.
 
+        /p
+        Parse Text for special escape sequences.
+        Only '\n' and '\\' are supported.
+
         /f=Buttons
-                Sets the buttons of the message box.
-                The 'Buttons' can be one of:
-                MB_ABORTRETRYIGNORE
-                MB_CANCELTRYCONTINUE
-                MB_OK (Default)
-                MB_OKCANCEL
-                MB_RETRYCANCEL
-                MB_YESNO
-                MB_YESNOCANCEL
+        Sets the buttons of the message box.
+        The 'Buttons' can be one of:
+        MB_ABORTRETRYIGNORE
+        MB_CANCELTRYCONTINUE
+        MB_OK (Default)
+        MB_OKCANCEL
+        MB_RETRYCANCEL
+        MB_YESNO
+        MB_YESNOCANCEL
 
         /f=Icon
-                Sets the icon of the message box.
-                The 'Icon' can be one of:
-                MB_ICONERROR
-                MB_ICONWARNING
-                MB_ICONINFORMATION
-                MB_ICONQUESTION
+        Sets the icon of the message box.
+        The 'Icon' can be one of:
+        MB_ICONERROR
+        MB_ICONWARNING
+        MB_ICONINFORMATION
+        MB_ICONQUESTION
 
         /f=DefaultButton
-                Sets the default button for the message box.
-                The 'DefaultButton' can be one of:
-                MB_DEFBUTTON1 (Default)
-                MB_DEFBUTTON2
-                MB_DEFBUTTON3
-                MB_DEFBUTTON4
+        Sets the default button for the message box.
+        The 'DefaultButton' can be one of:
+        MB_DEFBUTTON1 (Default)
+        MB_DEFBUTTON2
+        MB_DEFBUTTON3
+        MB_DEFBUTTON4
 
         /f=Modality
-                Sets the modality for the message box.
-                The 'Modality' can be one of:
-                MB_APPLMODAL (Default)
-                MB_SYSTEMMODAL
-                MB_TASKMODAL
+        Sets the modality for the message box.
+        The 'Modality' can be one of:
+        MB_APPLMODAL (Default)
+        MB_SYSTEMMODAL
+        MB_TASKMODAL
 
         /f=MiscFlag
-                Sets the miscellaneous flags for the message box.
-                Multiple /f options can be specified.
-                Each 'MiscFlag' can be one of:
-                MB_SIMPLEBEEP (Only when Title is not used)
-                MB_HELP (Probably won't work)
-                MB_DEFAULT_DESKTOP_ONLY
-                MB_RIGHT
-                MB_RTLREADING
-                MB_SETFOREGROUND
-                MB_TOPMOST
-                MB_SERVICE_NOTIFICATION
+        Sets the miscellaneous flags for the message box.
+        Multiple /f options can be specified.
+        Each 'MiscFlag' can be one of:
+        MB_SIMPLEBEEP (Only when Title is not used)
+        MB_HELP (Probably won't work)
+        MB_DEFAULT_DESKTOP_ONLY
+        MB_RIGHT
+        MB_RTLREADING
+        MB_SETFOREGROUND
+        MB_TOPMOST
+        MB_SERVICE_NOTIFICATION
 
         /w=Milliseconds
-                The amount of time, in milliseconds, to wait.
-                The default behavior is to wait indefinitely.
-                This feature relies on an undocumented Windows API.
+        The amount of time, in milliseconds, to wait.
+        The default behavior is to wait indefinitely.
+        This feature relies on an undocumented Windows API.
 ```
 
 Example with verbose output:

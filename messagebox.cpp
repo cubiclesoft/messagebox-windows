@@ -47,66 +47,70 @@ void DumpSyntax(TCHAR *currfile)
 	InitVerboseMode();
 #endif
 
-	_tprintf(_T("(C) 2019 CubicleSoft.  All Rights Reserved.\n\n"));
+	_tprintf(_T("(C) 2021 CubicleSoft.  All Rights Reserved.\n\n"));
 
-	_tprintf(_T("Syntax:  %s [options] [Title [Caption]]\n\n"), currfile);
+	_tprintf(_T("Syntax:  %s [options] [Text [Caption/Title]]\n\n"), currfile);
 
 	_tprintf(_T("Options:\n"));
 
 	_tprintf(_T("\t/v\n\
 \tVerbose mode.\n\
 \n\
+\t/p\n\
+\tParse Text for special escape sequences.\n\
+\tOnly '\\n' and '\\\\' are supported.\n\
+\n\
 \t/f=Buttons\n\
-\t\tSets the buttons of the message box.\n\
-\t\tThe 'Buttons' can be one of:\n\
-\t\tMB_ABORTRETRYIGNORE\n\
-\t\tMB_CANCELTRYCONTINUE\n\
-\t\tMB_OK (Default)\n\
-\t\tMB_OKCANCEL\n\
-\t\tMB_RETRYCANCEL\n\
-\t\tMB_YESNO\n\
-\t\tMB_YESNOCANCEL\n\
+\tSets the buttons of the message box.\n\
+\tThe 'Buttons' can be one of:\n\
+\tMB_ABORTRETRYIGNORE\n\
+\tMB_CANCELTRYCONTINUE\n\
+\tMB_OK (Default)\n\
+\tMB_OKCANCEL\n\
+\tMB_RETRYCANCEL\n\
+\tMB_YESNO\n\
+\tMB_YESNOCANCEL\n\
 \n\
 \t/f=Icon\n\
-\t\tSets the icon of the message box.\n\
-\t\tThe 'Icon' can be one of:\n\
-\t\tMB_ICONERROR\n\
-\t\tMB_ICONWARNING\n\
-\t\tMB_ICONINFORMATION\n\
-\t\tMB_ICONQUESTION\n\
+\tSets the icon of the message box.\n\
+\tThe 'Icon' can be one of:\n\
+\tMB_ICONERROR\n\
+\tMB_ICONWARNING\n\
+\tMB_ICONINFORMATION\n\
+\tMB_ICONQUESTION\n\
 \n\
 \t/f=DefaultButton\n\
-\t\tSets the default button for the message box.\n\
-\t\tThe 'DefaultButton' can be one of:\n\
-\t\tMB_DEFBUTTON1 (Default)\n\
-\t\tMB_DEFBUTTON2\n\
-\t\tMB_DEFBUTTON3\n\
-\t\tMB_DEFBUTTON4\n\
+\tSets the default button for the message box.\n\
+\tThe 'DefaultButton' can be one of:\n\
+\tMB_DEFBUTTON1 (Default)\n\
+\tMB_DEFBUTTON2\n\
+\tMB_DEFBUTTON3\n\
+\tMB_DEFBUTTON4\n\
 \n\
 \t/f=Modality\n\
-\t\tSets the modality for the message box.\n\
-\t\tThe 'Modality' can be one of:\n\
-\t\tMB_APPLMODAL (Default)\n\
-\t\tMB_SYSTEMMODAL\n\
-\t\tMB_TASKMODAL\n\
+\tSets the modality for the message box.\n\
+\tThe 'Modality' can be one of:\n\
+\tMB_APPLMODAL (Default)\n\
+\tMB_SYSTEMMODAL\n\
+\tMB_TASKMODAL\n\
 \n\
 \t/f=MiscFlag\n\
-\t\tSets the miscellaneous flags for the message box.\n\
-\t\tMultiple /f options can be specified.\n\
-\t\tEach 'MiscFlag' can be one of:\n\
-\t\tMB_SIMPLEBEEP (Only when Title is not used)\n\
-\t\tMB_HELP (Probably won't work)\n\
-\t\tMB_DEFAULT_DESKTOP_ONLY\n\
-\t\tMB_RIGHT\n\
-\t\tMB_RTLREADING\n\
-\t\tMB_SETFOREGROUND\n\
-\t\tMB_TOPMOST\n\
-\t\tMB_SERVICE_NOTIFICATION\n\
+\tSets the miscellaneous flags for the message box.\n\
+\tMultiple /f options can be specified.\n\
+\tEach 'MiscFlag' can be one of:\n\
+\tMB_SIMPLEBEEP (Only when Title is not used)\n\
+\tMB_HELP (Probably won't work)\n\
+\tMB_DEFAULT_DESKTOP_ONLY\n\
+\tMB_RIGHT\n\
+\tMB_RTLREADING\n\
+\tMB_SETFOREGROUND\n\
+\tMB_TOPMOST\n\
+\tMB_SERVICE_NOTIFICATION\n\
 \n\
 \t/w=Milliseconds\n\
-\t\tThe amount of time, in milliseconds, to wait.\n\
-\t\tThe default behavior is to wait indefinitely.\n\
-\t\tThis feature relies on an undocumented Windows API.\n\n"));
+\tThe amount of time, in milliseconds, to wait.\n\
+\tThe default behavior is to wait indefinitely.\n\
+\tThis feature relies on an undocumented Windows API.\n\n"));
 
 #ifdef SUBSYSTEM_WINDOWS
 	_tprintf(_T("\t/attach\n"));
@@ -122,6 +126,7 @@ int _tmain(int argc, TCHAR **argv)
 	UINT defbutton = MB_DEFBUTTON1;
 	UINT modality = MB_APPLMODAL;
 	bool simplebeep = false;
+	bool parsetext = false;
 	UINT flags = 0;
 	HMODULE modulehandle = NULL;
 	DWORD waitamount = INFINITE;
@@ -137,6 +142,7 @@ int _tmain(int argc, TCHAR **argv)
 
 			return 0;
 		}
+		else if (!_tcsicmp(argv[x], _T("/p")))  parsetext = true;
 		else if (!_tcsicmp(argv[x], _T("/f=MB_ABORTRETRYIGNORE")))  buttons = MB_ABORTRETRYIGNORE;
 		else if (!_tcsicmp(argv[x], _T("/f=MB_CANCELTRYCONTINUE")))  buttons = MB_CANCELTRYCONTINUE;
 		else if (!_tcsicmp(argv[x], _T("/f=MB_OK")))  buttons = MB_OK;
@@ -216,12 +222,47 @@ int _tmain(int argc, TCHAR **argv)
 	}
 	else
 	{
+		LPCTSTR maintext = argv[x];
+		LPCTSTR caption = (x + 1 < argc ? argv[x + 1] : NULL);
+
+		// Handle easier parsing of newlines in the text.
+		if (parsetext)
+		{
+			LPTSTR maintext2 = (LPTSTR)malloc(_tcslen(maintext) * sizeof(TCHAR));
+
+			size_t x3 = 0;
+
+			for (size_t x2 = 0; maintext[x2]; x2++)
+			{
+				if (maintext[x2] == _T('\\') && maintext[x2 + 1] == _T('n'))
+				{
+					x2++;
+
+					maintext2[x3++] = _T('\n');
+				}
+				else if (maintext[x2] == _T('\\') && maintext[x2 + 1] == _T('\\'))
+				{
+					x2++;
+
+					maintext2[x3++] = _T('\\');
+				}
+				else
+				{
+					maintext2[x3++] = maintext[x2];
+				}
+			}
+
+			maintext2[x3] = _T('\0');
+
+			maintext = maintext2;
+		}
+
 		if (verbose)
 		{
 			_tprintf(_T("MessageBox(\n"));
 			_tprintf(_T("\thWnd = 0x%p,\n"), (void *)::GetConsoleWindow());
-			_tprintf(_T("\tlpText = %s,\n"), argv[x]);
-			_tprintf(_T("\tlpCaption = %s,\n"), (x + 1 < argc ? argv[x + 1] : _T("NULL")));
+			_tprintf(_T("\tlpText = %s,\n"), maintext);
+			_tprintf(_T("\tlpCaption = %s,\n"), (caption != NULL ? caption : _T("NULL")));
 			_tprintf(_T("\tuType = "));
 			if (buttons == MB_ABORTRETRYIGNORE)  _tprintf(_T("MB_ABORTRETRYIGNORE"));
 			else if (buttons == MB_CANCELTRYCONTINUE)  _tprintf(_T("MB_CANCELTRYCONTINUE"));
@@ -270,13 +311,13 @@ int _tmain(int argc, TCHAR **argv)
 
 			if (TempMBTPtr != NULL)
 			{
-				result = TempMBTPtr(::GetConsoleWindow(), argv[x], (x + 1 < argc ? argv[x + 1] : NULL), buttons | icon | defbutton | modality | flags, 0, waitamount);
+				result = TempMBTPtr(::GetConsoleWindow(), maintext, caption, buttons | icon | defbutton | modality | flags, 0, waitamount);
 
 				displayed = true;
 			}
 		}
 
-		if (!displayed)  result = ::MessageBox(::GetConsoleWindow(), argv[x], (x + 1 < argc ? argv[x + 1] : NULL), buttons | icon | defbutton | modality | flags);
+		if (!displayed)  result = ::MessageBox(::GetConsoleWindow(), maintext, caption, buttons | icon | defbutton | modality | flags);
 	}
 
 	if (!result)
@@ -348,7 +389,7 @@ LPSTR* CommandLineToArgvA(LPSTR lpCmdLine, INT *pNumArgs)
 	LPSTR* result = (LPSTR *)::LocalAlloc(LMEM_FIXED, storage);
 	if (result == NULL)
 	{
-		LocalFree(args);
+		::LocalFree(args);
 
 		return NULL;
 	}
